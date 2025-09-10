@@ -16,13 +16,15 @@
 //! 3. If the `panic!` implementation is known to abort instead of unwinding,
 //!    then the `abort` function simply triggers a panic.
 //!    This requires a recent version of Rust (1.60) in order to detect whether panics unwind or abort.
-//! 3. If no other implementations are available,
+//! 4. On Rust versions since [1.81], this unwinds past a `extern "C"` function, which is guaranteed to trigger an abort.
+//! 5. If no other implementations are available,
 //!    then the `abort` function triggers a double-panic.
 //!    This always triggers an abort regardless of the rust version or compiler settings.
 //!
 //! [libc-abort]: https://en.cppreference.com/w/c/program/abort
 //! [libc-crate]: https://crates.io/crates/libc
 //! [nomicon-exception-safety]: https://doc.rust-lang.org/nomicon/exception-safety.html
+//! [1.81]: https://blog.rust-lang.org/2024/09/05/Rust-1.81.0/
 #![cfg_attr(not(any(doc, feature = "std")), no_std)]
 #![cfg_attr(has_doc_cfg, feature(doc_cfg))] // doc_cfg only supported on nightly
 #![cfg_attr(trap_impl = "core-intrinsics", allow(internal_features))] // very stable in practice...
